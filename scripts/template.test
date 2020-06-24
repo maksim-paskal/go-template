@@ -1,0 +1,3 @@
+some
+test = {{ "aaa" | quote }}
+text = {{ getEnv "SOMEVAR" | quote }}
