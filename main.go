@@ -18,22 +18,25 @@ import (
 	"fmt"
 	"os"
 	"text/template"
+
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-func main() {
-	fi, err := os.Stdin.Stat()
-	if err != nil {
-		panic(err)
-	}
+type appConfigType struct {
+	Version string
+	file    *string
+}
 
-	if fi.Mode()&os.ModeNamedPipe == 0 {
-		fmt.Println("no pipe :(")
-		fmt.Println("")
-		fmt.Println("use: cat test | go-template ")
-		return
-	}
+var appConfig = appConfigType{
+	Version: "1.0.1",
+	file: kingpin.Flag(
+		"file",
+		"file to parse",
+	).String(),
+}
 
-	funcs := template.FuncMap{
+func goTemplateFunc() map[string]interface{} {
+	return template.FuncMap{
 		"getEnv": func(env string) string {
 			return os.Getenv(env)
 		},
@@ -41,10 +44,11 @@ func main() {
 			return fmt.Sprintf("%q", str)
 		},
 	}
-
+}
+func parseFromPipe() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		t, err := template.New(scanner.Text()).Funcs(funcs).Parse(scanner.Text())
+		t, err := template.New(scanner.Text()).Funcs(goTemplateFunc()).Parse(scanner.Text())
 
 		if err != nil {
 			panic(err)
@@ -60,5 +64,65 @@ func main() {
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
+	}
+}
+
+func parseFromFile() {
+	/*
+			files, err := filepath.Glob(*appConfig.file)
+			if err != nil {
+				panic(err)
+			}
+
+			fmt.Println(files)
+
+		name := path.Base(files[0])
+		t, err := template.New(name).Funcs(goTemplateFunc()).ParseFiles(files...)
+
+		if err != nil {
+			panic(err)
+		}
+
+		var tpl bytes.Buffer
+		err = t.Execute(&tpl, nil)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(tpl.String())
+
+	*/
+
+	var templates = template.Must(template.ParseGlob(*appConfig.file))
+	templates.Funcs(goTemplateFunc())
+
+	var tpl bytes.Buffer
+	err := templates.Execute(&tpl, nil)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(tpl.String())
+}
+
+func main() {
+	kingpin.Version(appConfig.Version)
+	kingpin.HelpFlag.Short('h')
+	kingpin.Parse()
+
+	if len(*appConfig.file) > 0 {
+		parseFromFile()
+	} else {
+		fi, err := os.Stdin.Stat()
+		if err != nil {
+			panic(err)
+		}
+
+		if fi.Mode()&os.ModeNamedPipe == 0 {
+			fmt.Println("no pipe :(")
+			fmt.Println("")
+			fmt.Println("use: cat test | go-template ")
+			return
+		}
+
+		parseFromPipe()
 	}
 }

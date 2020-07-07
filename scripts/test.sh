@@ -20,4 +20,6 @@ set -ex
 export SOMEVAR=1234
 
 go build -v -o go-template .
-cat scripts/template.test | ./go-template
+cat scripts/template.pipe.test | ./go-template $*
+./go-template --file scripts/template.file.test
+./go-template --file 'scripts/dir/*'
