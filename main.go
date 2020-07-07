@@ -17,6 +17,8 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 	"text/template"
 
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -68,12 +70,28 @@ func parseFromPipe() {
 }
 
 func parseFromFile() {
+	files, err := filepath.Glob(*appConfig.file)
+	if err != nil {
+		panic(err)
+	}
+
+	templateName := filepath.Base(files[0])
+
+	// template file without _ prefix
+	for _, i := range files {
+		name := filepath.Base(i)
+
+		if !strings.HasPrefix(name, "_") {
+			templateName = name
+			break
+		}
+	}
 
 	var templates = template.Must(template.ParseGlob(*appConfig.file))
 	templates.Funcs(goTemplateFunc())
 
 	var tpl bytes.Buffer
-	err := templates.Execute(&tpl, nil)
+	err = templates.ExecuteTemplate(&tpl, templateName, nil)
 	if err != nil {
 		panic(err)
 	}

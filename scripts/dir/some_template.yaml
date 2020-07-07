@@ -1,0 +1,4 @@
+START
+{{ template "name" }}
+{{ template "name2" }}
+END
