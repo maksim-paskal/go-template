@@ -68,29 +68,6 @@ func parseFromPipe() {
 }
 
 func parseFromFile() {
-	/*
-			files, err := filepath.Glob(*appConfig.file)
-			if err != nil {
-				panic(err)
-			}
-
-			fmt.Println(files)
-
-		name := path.Base(files[0])
-		t, err := template.New(name).Funcs(goTemplateFunc()).ParseFiles(files...)
-
-		if err != nil {
-			panic(err)
-		}
-
-		var tpl bytes.Buffer
-		err = t.Execute(&tpl, nil)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(tpl.String())
-
-	*/
 
 	var templates = template.Must(template.ParseGlob(*appConfig.file))
 	templates.Funcs(goTemplateFunc())
