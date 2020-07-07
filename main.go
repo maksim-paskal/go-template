@@ -24,13 +24,18 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+var (
+	buildTime   string
+	buildGitTag string
+)
+
 type appConfigType struct {
 	Version string
 	file    *string
 }
 
 var appConfig = appConfigType{
-	Version: "1.0.1",
+	Version: fmt.Sprintf("%s-%s", buildGitTag, buildTime),
 	file: kingpin.Flag(
 		"file",
 		"file to parse",
