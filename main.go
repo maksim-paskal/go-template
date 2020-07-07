@@ -51,13 +51,34 @@ var appConfig = appConfigType{
 	).String(),
 }
 
-func goTemplateFunc() map[string]interface{} {
-	return sprig.FuncMap()
+func goTemplateFunc(t *template.Template) map[string]interface{} {
+	f := sprig.TxtFuncMap()
+
+	f["include"] = func(name string, data interface{}) (string, error) {
+		buf := bytes.NewBuffer(nil)
+		if err := t.ExecuteTemplate(buf, name, data); err != nil {
+			return "", err
+		}
+		return buf.String(), nil
+	}
+
+	f["toYaml"] = func(v interface{}) string {
+		data, err := yaml.Marshal(v)
+		if err != nil {
+			// Swallow errors inside of a template.
+			return ""
+		}
+		return string(data)
+	}
+
+	return f
 }
 func parseFromPipe() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		t, err := template.New(scanner.Text()).Funcs(goTemplateFunc()).Parse(scanner.Text())
+		templates := template.New(scanner.Text())
+
+		t, err := templates.Funcs(goTemplateFunc(templates)).Parse(scanner.Text())
 
 		if err != nil {
 			panic(err)
@@ -94,7 +115,8 @@ func parseFromFile() {
 		}
 	}
 
-	templates := template.Must(template.New("").Funcs(goTemplateFunc()).ParseGlob(*appConfig.file))
+	t := template.New("")
+	templates := template.Must(t.Funcs(goTemplateFunc(t)).ParseGlob(*appConfig.file))
 
 	var tpl bytes.Buffer
 	err = templates.ExecuteTemplate(&tpl, templateName, templateData)
