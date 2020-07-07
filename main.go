@@ -23,6 +23,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/Masterminds/sprig"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/yaml.v2"
 )
@@ -51,14 +52,7 @@ var appConfig = appConfigType{
 }
 
 func goTemplateFunc() map[string]interface{} {
-	return template.FuncMap{
-		"getEnv": func(env string) string {
-			return os.Getenv(env)
-		},
-		"quote": func(str string) string {
-			return fmt.Sprintf("%q", str)
-		},
-	}
+	return sprig.FuncMap()
 }
 func parseFromPipe() {
 	scanner := bufio.NewScanner(os.Stdin)

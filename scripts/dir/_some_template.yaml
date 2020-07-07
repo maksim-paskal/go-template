@@ -1,6 +1,6 @@
 START
 {{ template "name" }}
 {{ template "name2" }}
-{{ getEnv "SOMEVAR" | quote }}
+{{ env "SOMEVAR" | quote }}
 {{ .Values.test1.test2.test3.test4 }}
 END
