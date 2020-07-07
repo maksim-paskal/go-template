@@ -92,8 +92,7 @@ func parseFromFile() {
 		}
 	}
 
-	var templates = template.Must(template.ParseGlob(*appConfig.file))
-	templates.Funcs(goTemplateFunc())
+	templates := template.Must(template.New("").Funcs(goTemplateFunc()).ParseGlob(*appConfig.file))
 
 	var tpl bytes.Buffer
 	err = templates.ExecuteTemplate(&tpl, templateName, nil)

@@ -1,4 +1,5 @@
 START
 {{ template "name" }}
 {{ template "name2" }}
+{{ getEnv "SOMEVAR" | quote }}
 END

@@ -2,3 +2,4 @@
 some block
 {{ end }}
 ss
+{{ getEnv "SOMEVAR" | quote }}
