@@ -16,12 +16,15 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
 
 	"gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -32,6 +35,7 @@ var (
 type appConfigType struct {
 	Version string
 	file    *string
+	values  *string
 }
 
 var appConfig = appConfigType{
@@ -39,6 +43,10 @@ var appConfig = appConfigType{
 	file: kingpin.Flag(
 		"file",
 		"file to parse",
+	).String(),
+	values: kingpin.Flag(
+		"values",
+		"values file to parse",
 	).String(),
 }
 
@@ -62,7 +70,7 @@ func parseFromPipe() {
 		}
 
 		var tpl bytes.Buffer
-		err = t.Execute(&tpl, nil)
+		err = t.Execute(&tpl, templateData)
 		if err != nil {
 			panic(err)
 		}
@@ -86,7 +94,7 @@ func parseFromFile() {
 	for _, i := range files {
 		name := filepath.Base(i)
 
-		if !strings.HasPrefix(name, "_") {
+		if !strings.HasPrefix(name, "_") && !strings.EqualFold(name, "values.yaml") {
 			templateName = name
 			break
 		}
@@ -95,11 +103,19 @@ func parseFromFile() {
 	templates := template.Must(template.New("").Funcs(goTemplateFunc()).ParseGlob(*appConfig.file))
 
 	var tpl bytes.Buffer
-	err = templates.ExecuteTemplate(&tpl, templateName, nil)
+	err = templates.ExecuteTemplate(&tpl, templateName, templateData)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(tpl.String())
+}
+
+type Inventory struct {
+	Values map[interface{}]interface{}
+}
+
+var templateData = Inventory{
+	Values: make(map[interface{}]interface{}),
 }
 
 func main() {
@@ -107,6 +123,18 @@ func main() {
 	kingpin.HelpFlag.Short('h')
 	kingpin.Parse()
 
+	if len(*appConfig.values) > 0 {
+
+		data, err := ioutil.ReadFile(*appConfig.values)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = yaml.Unmarshal(data, &templateData.Values)
+		if err != nil {
+			panic(err)
+		}
+	}
 	if len(*appConfig.file) > 0 {
 		parseFromFile()
 	} else {
