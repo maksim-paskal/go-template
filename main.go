@@ -146,7 +146,21 @@ func main() {
 			log.Fatal(err)
 		}
 
-		err = yaml.Unmarshal(data, &templateData.Values)
+		t := template.New("")
+
+		tpl, err := t.Funcs(goTemplateFunc(t)).Parse(string(data))
+		if err != nil {
+			panic(err)
+		}
+
+		var tplBytes bytes.Buffer
+
+		err = tpl.Execute(&tplBytes, nil)
+		if err != nil {
+			panic(err)
+		}
+
+		err = yaml.Unmarshal(tplBytes.Bytes(), &templateData.Values)
 		if err != nil {
 			panic(err)
 		}
