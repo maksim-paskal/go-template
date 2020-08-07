@@ -1,4 +1,4 @@
-module main
+module github.com/maksim-paskal/go-template
 
 go 1.12
 
