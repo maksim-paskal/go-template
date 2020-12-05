@@ -1,6 +1,6 @@
 module github.com/maksim-paskal/go-template
 
-go 1.12
+go 1.15
 
 require (
 	github.com/Masterminds/goutils v1.1.0 // indirect
