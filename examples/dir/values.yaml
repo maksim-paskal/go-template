@@ -1,0 +1,4 @@
+test1:
+  test2:
+    test3: "value"
+    test4: '{{ env "SOMEVAR" }}'

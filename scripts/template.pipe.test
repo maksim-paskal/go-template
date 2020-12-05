@@ -1,3 +1,0 @@
-some
-test = {{ "aaa" | quote }}
-text = {{ env "SOMEVAR" | quote }}

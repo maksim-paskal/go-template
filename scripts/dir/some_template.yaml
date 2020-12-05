@@ -1,8 +1,0 @@
-START
-{{ template "name" }}
-{{ template "name2" }}
-{{ env "SOMEVAR" | quote }}
-{{ .Values.test1.test2.test3.test4 }}
-{{ .Values.test1.test2 | toYaml }}
-{{ include "values.yaml" . | indent 10}}
-END

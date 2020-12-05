@@ -1,5 +1,0 @@
-{{ define "aa" }}
-some block
-{{ end }}
-ss
-{{ env "SOMEVAR" | quote }}

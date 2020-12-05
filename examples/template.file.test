@@ -1,0 +1,6 @@
+START
+{{ define "aa" }}
+some block
+{{ end }}
+text-{{ env "SOMEVAR" | quote }}
+END
