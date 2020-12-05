@@ -29,3 +29,5 @@ export GOX="go run github.com/mitchellh/gox"
 rm -rf _dist
 
 $GOX -parallel=3 -output="_dist/$BINNAME-{{.OS}}-{{.Arch}}" -osarch="$TARGETS" -tags "$TAGS" -ldflags "$LDFLAGS" ./cmd
+
+shasum -a 256 ./_dist/go-template* > ./_dist/sha256.txt
