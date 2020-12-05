@@ -13,12 +13,11 @@ limitations under the License.
 package main
 
 import (
-	"os"
 	"testing"
 )
 
 func TestParseFromSingleFile(t *testing.T) {
-	os.Setenv("SOMEVAR", "some-env-value-file")
+	t.Parallel()
 
 	inventory, err := parseValues(testValuesFile)
 	if err != nil {
@@ -30,13 +29,15 @@ func TestParseFromSingleFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if result != "START\n\ntext-\"some-env-value-file\"\nEND" {
-		t.Fatalf("file %s is incorrect, return=%s", testFile, result)
+	ok := "START\n\ntext-\"some-env-value\"\nEND"
+
+	if result != ok {
+		t.Fatalf("file %s is incorrect\n=return=%s\nok=%s", testDir, result, ok)
 	}
 }
 
 func TestParseFromDir(t *testing.T) {
-	os.Setenv("SOMEVAR", "some-env-value-dir")
+	t.Parallel()
 
 	inventory, err := parseValues(testDirValues)
 	if err != nil {
@@ -52,12 +53,12 @@ func TestParseFromDir(t *testing.T) {
 T1 
 
 T2
-"some-env-value-dir"valuetest3: value
-test4: some-env-value-dir
+"some-env-value"valuetest3: value
+test4: some-env-value
           test1:
             test2:
               test3: "value"
-              test4: 'some-env-value-dir'
+              test4: 'some-env-value'
 END`
 
 	if result != ok {

@@ -18,6 +18,8 @@ import (
 )
 
 func TestParseValues(t *testing.T) {
+	t.Parallel()
+
 	inventory, err := parseValues(testValuesFile)
 	if err != nil {
 		t.Fatal(err)
