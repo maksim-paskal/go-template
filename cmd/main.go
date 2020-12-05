@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pkg/errors"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -37,9 +38,9 @@ func main() {
 	fileValuesLen := len(*appConfig.file)
 
 	if fileValuesLen > 0 {
-		templateData, err = parseValues(*appConfig.file)
+		templateData, err = parseValues(*appConfig.values)
 		if err != nil {
-			panic(err)
+			panic(errors.Wrap(err, fmt.Sprintf("error in parseValues file %s", *appConfig.values)))
 		}
 	}
 
@@ -48,7 +49,7 @@ func main() {
 	if fileLen > 0 {
 		result, err := parseFromFile(*appConfig.file, templateData)
 		if err != nil {
-			panic(err)
+			panic(errors.Wrap(err, fmt.Sprintf("error in parseFromFile file %s", *appConfig.file)))
 		}
 
 		fmt.Println(result)
@@ -58,7 +59,7 @@ func main() {
 
 	fi, err := os.Stdin.Stat()
 	if err != nil {
-		panic(err)
+		panic(errors.Wrap(err, "errors in os.Stdin.Stat"))
 	}
 
 	if fi.Mode()&os.ModeNamedPipe == 0 {
@@ -71,6 +72,6 @@ func main() {
 
 	err = parseFromPipe(templateData)
 	if err != nil {
-		panic(err)
+		panic(errors.Wrap(err, "errors in parseFromPipe"))
 	}
 }
