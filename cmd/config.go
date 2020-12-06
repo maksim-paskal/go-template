@@ -13,26 +13,21 @@ limitations under the License.
 package main
 
 import (
+	"flag"
 	"fmt"
-
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type appConfigType struct {
-	Version string
-	file    *string
-	values  *string
+	Version     string
+	showVersion *bool
+	file        *string
+	values      *string
 }
 
 //nolint:gochecknoglobals
 var appConfig = appConfigType{
-	Version: fmt.Sprintf("%s-%s", buildGitTag, buildTime),
-	file: kingpin.Flag(
-		"file",
-		"file to parse",
-	).String(),
-	values: kingpin.Flag(
-		"values",
-		"values file to parse",
-	).String(),
+	Version:     fmt.Sprintf("%s-%s", gitVersion, buildTime),
+	showVersion: flag.Bool("version", false, "show version"),
+	file:        flag.String("file", "", "file to parse"),
+	values:      flag.String("values", "", "values file to parse"),
 }

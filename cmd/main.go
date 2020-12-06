@@ -13,23 +13,26 @@ limitations under the License.
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
 	"github.com/pkg/errors"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 //nolint:gochecknoglobals
 var (
-	buildTime   string
-	buildGitTag string
+	gitVersion string
+	buildTime  string
 )
 
 func main() {
-	kingpin.Version(appConfig.Version)
-	kingpin.HelpFlag.Short('h')
-	kingpin.Parse()
+	flag.Parse()
+
+	if *appConfig.showVersion {
+		fmt.Println(appConfig.Version)
+		os.Exit(0)
+	}
 
 	var err error
 
