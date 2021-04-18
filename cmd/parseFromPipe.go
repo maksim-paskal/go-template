@@ -40,9 +40,5 @@ func parseFromPipe(templateData Inventory) error {
 		fmt.Println(tpl.String())
 	}
 
-	if err := scanner.Err(); err != nil {
-		return err
-	}
-
-	return nil
+	return scanner.Err()
 }
