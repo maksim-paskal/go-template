@@ -14,7 +14,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 )
 
 type appConfigType struct {
@@ -26,7 +25,7 @@ type appConfigType struct {
 
 //nolint:gochecknoglobals
 var appConfig = appConfigType{
-	Version:     fmt.Sprintf("%s-%s", gitVersion, buildTime),
+	Version:     gitVersion,
 	showVersion: flag.Bool("version", false, "show version"),
 	file:        flag.String("file", "", "file to parse"),
 	values:      flag.String("values", "", "values file to parse"),

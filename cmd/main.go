@@ -23,7 +23,6 @@ import (
 //nolint:gochecknoglobals
 var (
 	gitVersion string
-	buildTime  string
 )
 
 func main() {
