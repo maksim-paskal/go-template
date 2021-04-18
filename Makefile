@@ -10,3 +10,5 @@ build:
 	@./scripts/build-all.sh
 	ls -lah _dist
 	go mod tidy
+run:
+	go run --race ./cmd $(args)
