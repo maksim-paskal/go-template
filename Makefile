@@ -3,7 +3,7 @@ test:
 	go fmt ./cmd
 	go mod tidy
 	SOMEVAR=some-env-value go test ./cmd
-	golangci-lint run --allow-parallel-runners -v --enable-all --disable testpackage,wrapcheck --fix
+	golangci-lint run -v
 build:
 	@./scripts/validate-license.sh
 	@./scripts/build-all.sh
