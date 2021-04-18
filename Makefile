@@ -2,7 +2,7 @@
 test:
 	go fmt ./cmd
 	go mod tidy
-	SOMEVAR=some-env-value go test ./cmd
+	SOMEVAR=some-env-value go test --race ./cmd
 	golangci-lint run -v
 build:
 	@./scripts/validate-license.sh
