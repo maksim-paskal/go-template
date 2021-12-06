@@ -37,7 +37,7 @@ func main() {
 
 	templateData := Inventory{}
 
-	fileValuesLen := len(*appConfig.file)
+	fileValuesLen := len(*appConfig.values)
 
 	if fileValuesLen > 0 {
 		templateData, err = parseValues(*appConfig.values)

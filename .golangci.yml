@@ -9,3 +9,4 @@ linters:
   - wrapcheck
   - exhaustivestruct
   - forbidigo
+  - varnamelen
