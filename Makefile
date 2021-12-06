@@ -6,9 +6,6 @@ test:
 	SOMEVAR=some-env-value go test --race ./cmd
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run -v
 build:
-	make test
-	@./scripts/build-all.sh
-	ls -lah _dist
-	go mod tidy
+	go run github.com/goreleaser/goreleaser@latest build --rm-dist --skip-validate
 run:
 	go run --race ./cmd $(args)
