@@ -4,7 +4,7 @@ test:
 	go fmt ./cmd
 	go mod tidy
 	SOMEVAR=some-env-value go test --race ./cmd
-	golangci-lint run -v
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run -v
 build:
 	make test
 	@./scripts/build-all.sh
