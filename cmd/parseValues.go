@@ -14,10 +14,10 @@ package main
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"text/template"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 type Inventory struct {
@@ -25,7 +25,7 @@ type Inventory struct {
 }
 
 func parseValues(fileName string) (Inventory, error) {
-	data, err := ioutil.ReadFile(fileName)
+	data, err := os.ReadFile(fileName)
 	if err != nil {
 		return Inventory{}, err
 	}

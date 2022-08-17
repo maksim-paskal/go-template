@@ -16,8 +16,8 @@ import (
 	"bytes"
 	"text/template"
 
-	"github.com/Masterminds/sprig"
-	"gopkg.in/yaml.v2"
+	"github.com/Masterminds/sprig/v3"
+	"gopkg.in/yaml.v3"
 )
 
 func goTemplateFunc(t *template.Template) map[string]interface{} {
